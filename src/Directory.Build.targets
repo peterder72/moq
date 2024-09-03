@@ -4,6 +4,13 @@
   <PropertyGroup Condition="'$(CI)' == 'true' and '$(Language)' == 'C#'">
     <DefineConstants>CI;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Label="Build">
+    <!-- Tests projects don't need API docs, typically -->
+    <GenerateDocumentationFile Condition="$(GenerateDocumentationFile) == '' and $(IsTestProject) == 'true'">false</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition="$(GenerateDocumentationFile) == '' and $(MSBuildProjectName.Contains('Tests'))">false</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition="$(GenerateDocumentationFile) == ''">true</GenerateDocumentationFile>
+  </PropertyGroup>
   
   <PropertyGroup Condition="'$(IsPackable)' == ''">
     <IsPackable Condition="'$(PackAsTool)' == 'true'">true</IsPackable>
@@ -35,7 +42,7 @@
 
     <None Update="@(None -> WithMetadataValue('Filename', 'readme'))" 
           Pack="true" PackagePath="%(Filename)%(Extension)" 
-          Condition="'$(PackageReadmeFile)' != ''" />
+          Condition="'$(PackReadme)' != 'false' and '$(PackageReadmeFile)' != ''" />
     
     <!-- src-level will need explicit inclusion -->
     <None Include="$(MSBuildThisFileDirectory)icon.png" Link="icon.png" Visible="false" 
@@ -44,7 +51,7 @@
 
     <None Include="$(MSBuildThisFileDirectory)readme.md" Link="readme.md"  
           Pack="true" PackagePath="%(Filename)%(Extension)"
-          Condition="Exists('$(MSBuildThisFileDirectory)readme.md') and !Exists('$(MSBuildProjectDirectory)\readme.md')" />
+          Condition="'$(PackReadme)' != 'false' and Exists('$(MSBuildThisFileDirectory)readme.md') and !Exists('$(MSBuildProjectDirectory)\readme.md')" />
   </ItemGroup>
 
   <!-- Microsoft.NET.Sdk\targets\Microsoft.NET.DefaultAssemblyInfo.targets does this and is imported 
