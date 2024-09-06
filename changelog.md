@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+:hammer: Other:
+
+- Improved Performance of It.Is\<T\> matcher when used with an expression [\#1420](https://github.com/devlooped/moq/issues/1420)   
+
 ## [v4.20.71](https://github.com/devlooped/moq/tree/v4.20.71) (2024-09-03)
 
 [Full Changelog](https://github.com/devlooped/moq/compare/v4.20.70...v4.20.71)
